@@ -1,0 +1,24 @@
+Total complaints: 380371
+
+Complaints per product:
+product
+Credit reporting, credit repair services, or other personal consumer reports    122411
+Debt collection                                                                  85868
+Mortgage                                                                         52891
+Credit card or prepaid card                                                      41540
+Checking or savings account                                                      27677
+Student loan                                                                     21737
+Consumer Loan                                                                     9430
+Money transfer, virtual currency, or money service                                6951
+Payday loan, title loan, or personal loan                                         6136
+Vehicle loan or lease                                                             5730
+
+Narrative length (characters):
+count    380371.000000
+mean       1089.830997
+std        1174.596741
+min          37.000000
+25%         400.000000
+50%         751.000000
+75%        1370.000000
+max       31735.000000

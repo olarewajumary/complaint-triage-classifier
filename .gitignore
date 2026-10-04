@@ -8,3 +8,4 @@ __pycache__/
 .env
 models/*
 !models/.gitkeep
+!data/processed/eda_summary.txt
