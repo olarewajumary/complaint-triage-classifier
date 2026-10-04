@@ -8,7 +8,7 @@ Financial institutions receive large volumes of consumer complaints that need to
 
 ## Data
 
-~380K real consumer complaints from the CFPB Consumer Complaint Database (public, U.S. Government Work). Note: CFPB discontinued publishing complaint narratives in their live database on August 14, 2026, this project uses a historical snapshot (2011–2019) from a well-established public mirror, since the narrative field is essential to the task and is no longer available from the live source.
+~380K real consumer complaints from the CFPB Consumer Complaint Database (public, U.S. Government Work). Note: CFPB discontinued publishing complaint narratives in their live database on August 14, 2026. This project uses a historical snapshot (2011–2019) from a well-established public mirror, since the narrative field is essential to the task and is no longer available from the live source.
 
 ## Approach
 
@@ -38,3 +38,11 @@ result = predict("My mortgage servicer applied my payment to the wrong month..."
 ```
 
 Low-confidence predictions return `needs_human_review` instead of a forced guess. Invalid input (empty, too short, wrong type) returns a clear error rather than crashing.
+
+## Reproducing the model
+
+Trained weights aren't committed to this repo (GitHub's 100MB file limit, and they're fully reproducible from the pipeline below).
+
+1. Run `src/download_data.py`, then `src/split_data.py` to prepare the data
+2. Fine-tune `distilbert-base-uncased` on `data/processed/train.csv`
+3. Save the resulting model to `models/final_model/`
