@@ -1,0 +1,14 @@
+,precision,recall,f1-score,support
+Checking or savings account,0.843,0.859,0.851,4151.0
+Consumer Loan,0.594,0.576,0.585,1414.0
+Credit card or prepaid card,0.836,0.853,0.844,6231.0
+"Credit reporting, credit repair services, or other personal consumer reports",0.908,0.903,0.905,18362.0
+Debt collection,0.868,0.879,0.873,12880.0
+"Money transfer, virtual currency, or money service",0.863,0.724,0.787,1043.0
+Mortgage,0.937,0.948,0.942,7934.0
+"Payday loan, title loan, or personal loan",0.669,0.531,0.592,921.0
+Student loan,0.891,0.909,0.899,3260.0
+Vehicle loan or lease,0.606,0.584,0.595,860.0
+accuracy,0.873,0.873,0.873,0.873
+macro avg,0.801,0.777,0.787,57056.0
+weighted avg,0.872,0.873,0.872,57056.0
