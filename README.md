@@ -5,19 +5,6 @@ Sorts consumer financial complaints into 10 categories with a fine-tuned DistilB
 ![Python](https://img.shields.io/badge/python-3.13-blue)
 [![Model on Hugging Face](https://img.shields.io/badge/Hugging%20Face-model-yellow)](https://huggingface.co/maryolarewaju/complaint-triage-distilbert)
 ![Weighted F1](https://img.shields.io/badge/weighted%20F1-0.867%20on%20unseen%20test-brightgreen)
-<!-- Add after the Space is live:
-[![Live demo](https://img.shields.io/badge/demo-Hugging%20Face%20Space-orange)](SPACE_URL)
-Add after GitHub Actions is green:
-![CI](https://github.com/olarewajumary/complaint-triage-classifier/actions/workflows/ci.yml/badge.svg)
-Add after the LICENSE file exists:
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
--->
-
-<!-- Add after the Space is live:
-**Live demo:** SPACE_URL (no login or API key needed)
-
-![Demo](docs/images/demo.gif)
--->
 
 ## The problem
 
@@ -100,7 +87,7 @@ I chose 0.87 on validation, then checked it once on test. The two agreed. The 95
 
 1. Clean the text and merge category names that CFPB renamed in 2017.
 2. Drop categories under 1,000 complaints and complaints under 10 words.
-3. Fine-tune `distilbert-base-uncased` for 3 epochs on a free Kaggle GPU. I kept the epoch 2 model, not epoch 3 (see below).
+3. Fine-tune `distilbert-base-uncased` for 3 epochs on a Kaggle GPU. I kept the epoch 2 model, not epoch 3 (see below).
 4. At prediction time, validate the input, run the model, turn scores into probabilities, and compare the top probability to the cutoff.
 
 The model is on Hugging Face: [maryolarewaju/complaint-triage-distilbert](https://huggingface.co/maryolarewaju/complaint-triage-distilbert).
@@ -144,7 +131,7 @@ python src/split_data.py
 python src/train_baseline.py
 ```
 
-The saved test-set scores used for the evaluation were made on a free Kaggle GPU. Put them in `data/processed/` as `test_probs.npy` and `val_probs.npy`, then:
+The test-set and validation scores come from one inference pass on a Kaggle GPU (about 17 minutes each), and training fits inside Kaggle's free GPU quota. Put the scores in `data/processed/` as `test_probs.npy` and `val_probs.npy`, then:
 
 ```
 python src/evaluate.py
@@ -157,6 +144,6 @@ python src/tune_threshold.py
 
 ## Built with
 
-Python, pandas, scikit-learn (TF-IDF and Logistic Regression), PyTorch, Hugging Face Transformers (DistilBERT), Hugging Face Hub, matplotlib, Kaggle free GPU.
+Python, pandas, scikit-learn (TF-IDF and Logistic Regression), PyTorch, Hugging Face Transformers (DistilBERT), Hugging Face Hub, matplotlib, Kaggle (GPU).
 
 The git history shows the order the work happened in.
