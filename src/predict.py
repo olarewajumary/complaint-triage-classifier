@@ -43,7 +43,9 @@ def validate_input(text) -> str | None:
     
     return None
 
-CONFIDENCE_THRESHOLD = 0.5
+# Chosen on the validation set: ~95% accuracy on complaints handled automatically.
+# Trade-off curve: reports/threshold_tradeoff.png
+CONFIDENCE_THRESHOLD = 0.87
 
 def predict(text: str) -> dict:
     error = validate_input(text)

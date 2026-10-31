@@ -9,12 +9,12 @@ from check_duplicates import flag_duplicates, load_split
 REPORT_DIR = Path("reports")
 
 
-def load_results():
-    test = load_split("test")
-    probs = np.load("data/processed/test_probs.npy")
-    labels = np.array(sorted(test["product"].unique()))
+def load_results(split="test"):
+    data = load_split(split)
+    probs = np.load(f"data/processed/{split}_probs.npy")
+    labels = np.array(sorted(data["product"].unique()))
     predicted = labels[probs.argmax(axis=1)]
-    return test, predicted
+    return data, predicted
 
 
 def summarize(y_true, y_pred, name):
