@@ -31,6 +31,11 @@ def date_ranges(df) -> pd.DataFrame:
     return summary.rename(index=SHORT_NAMES).sort_values("min")
 
 
+def subproduct_mix(df, product) -> pd.Series:
+    rows = df.loc[df["product"] == product, "sub_product"]
+    return rows.value_counts(dropna=False)
+
+
 if __name__ == "__main__":
     test, predicted = load_results()
     table = main_mistake_per_class(test["product"], predicted)
@@ -41,3 +46,5 @@ if __name__ == "__main__":
     show_examples(test, predicted, "Vehicle loan or lease", "Consumer Loan")
     print()
     print(date_ranges(load_split("train")).to_string())
+    print()
+    print(subproduct_mix(load_split("train"), "Consumer Loan").to_string())
