@@ -3,10 +3,21 @@ import streamlit as st
 st.set_page_config(page_title="Complaint Triage Classifier")
 
 
+def log_peak_memory(label):
+    try:
+        import resource
+    except ImportError:
+        return
+    peak_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    print(f"app: {label}, peak memory {peak_mb:.0f} MB", flush=True)
+
+
 @st.cache_resource
 def load_predict_function():
+    log_peak_memory("before importing predict")
     from src.predict import CONFIDENCE_THRESHOLD, predict
 
+    log_peak_memory("model ready")
     return predict, CONFIDENCE_THRESHOLD
 
 
