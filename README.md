@@ -2,7 +2,7 @@
 
 Sorts consumer financial complaints into 10 categories with a fine-tuned DistilBERT, and sends the ones it is unsure about to a human instead of guessing.
 
-![Python](https://img.shields.io/badge/python-3.13-blue)
+![Python](https://img.shields.io/badge/python-3.14-blue)
 [![Model on Hugging Face](https://img.shields.io/badge/Hugging%20Face-model-yellow)](https://huggingface.co/maryolarewaju/complaint-triage-distilbert)
 ![Weighted F1](https://img.shields.io/badge/weighted%20F1-0.867%20on%20unseen%20test-brightgreen)
 
