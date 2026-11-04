@@ -1,5 +1,11 @@
 pandas
 requests
 scikit-learn
-transformers
-torch
+matplotlib
+torch==2.14.0
+transformers==5.17.0
+streamlit==1.66.1
+huggingface_hub==1.32.0
+safetensors==0.8.0
+tokenizers==0.23.2
+numpy==2.5.3
