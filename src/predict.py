@@ -1,7 +1,11 @@
+import os
+
 import torch
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
 
-MODEL_DIR = "models/final_model"
+LOCAL_MODEL_DIR = "models/final_model"
+HUB_MODEL_ID = "maryolarewaju/complaint-triage-distilbert"
+MODEL_DIR = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HUB_MODEL_ID
 
 tokenizer = DistilBertTokenizer.from_pretrained(MODEL_DIR)
 model = DistilBertForSequenceClassification.from_pretrained(MODEL_DIR)
