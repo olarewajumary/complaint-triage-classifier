@@ -42,7 +42,6 @@ Example, from `src/predict.py`:
 "yes"
 {'prediction': 'invalid_input', 'error': 'Input too short to classify reliably (minimum 5 words).'}
 ```
--->
 
 ## Data
 
