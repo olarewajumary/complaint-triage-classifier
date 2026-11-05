@@ -5,6 +5,19 @@ Sorts consumer financial complaints into 10 categories with a fine-tuned DistilB
 ![Python](https://img.shields.io/badge/python-3.14-blue)
 [![Model on Hugging Face](https://img.shields.io/badge/Hugging%20Face-model-yellow)](https://huggingface.co/maryolarewaju/complaint-triage-distilbert)
 ![Weighted F1](https://img.shields.io/badge/weighted%20F1-0.867%20on%20unseen%20test-brightgreen)
+[![Live demo](https://img.shields.io/badge/demo-live%20on%20Streamlit-FF4B4B)](https://complaint-triage.streamlit.app/)
+
+## Live demo
+
+Try it here: [complaint-triage.streamlit.app](https://complaint-triage.streamlit.app/)
+
+![Demo of the classifier sending a mortgage complaint to human review](docs/images/demo.gif)
+
+The app loads the model from the Hugging Face Hub. Free Streamlit apps can go to sleep when nobody is using them, so the first visit can be slow.
+
+| Confident prediction | Sent to a human | Invalid input |
+| --- | --- | --- |
+| ![A confident prediction](docs/images/demo-confident.png) | ![A complaint flagged for human review](docs/images/demo-human-review.png) | ![An input that is too short](docs/images/demo-invalid.png) |
 
 ## The problem
 
