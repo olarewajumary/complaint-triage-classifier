@@ -33,16 +33,15 @@ A bank gets thousands of complaints a day, and each one has to reach the right t
 Example, from `src/predict.py`:
 
 ```
+"A debt collector keeps calling my workplace about a debt I already paid and will not stop after I asked them in writing."
+{'prediction': 'Debt collection', 'confidence': 0.912}
+
 "My mortgage servicer applied my payment to the wrong month and now shows me as 60 days late."
 {'prediction': 'needs_human_review', 'top_guess': 'Mortgage', 'confidence': 0.658}
 
-"no"
+"yes"
 {'prediction': 'invalid_input', 'error': 'Input too short to classify reliably (minimum 5 words).'}
 ```
-
-<!-- Add one confident example, using the real output from your own run:
-"<a clear complaint>"
-{'prediction': '...', 'confidence': ...}
 -->
 
 ## Data
