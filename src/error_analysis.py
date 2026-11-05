@@ -48,3 +48,6 @@ if __name__ == "__main__":
     print(date_ranges(load_split("train")).to_string())
     print()
     print(subproduct_mix(load_split("train"), "Consumer Loan").to_string())
+    print()
+    show_examples(test, predicted, "Money transfer, virtual currency, or money service", "Checking or savings account", n=3)
+    show_examples(test, predicted, "Payday loan, title loan, or personal loan", "Debt collection", n=3)
