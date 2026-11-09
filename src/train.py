@@ -1,3 +1,20 @@
+"""Stage 2 of training the complaint triage classifier.
+
+This is the training code from my Kaggle notebook, with seed 42 and the same
+settings. It continues from a checkpoint made by a 1-epoch run (stage 1) that
+is not in this repo, so --checkpoint is required.
+
+Which epoch is published: with load_best_model_at_end and weighted F1, the
+trainer ends on the epoch with the best validation F1. In my real run that was
+epoch 3 (0.870697 vs 0.870003 for epoch 2), but validation loss rose in
+epoch 3 (0.807749 to 0.902698). I picked the epoch 2 checkpoint by hand from
+the saved checkpoint folders, and that is the model on the Hub. So the
+"Best checkpoint" line this script prints is not the published model.
+
+The Trainer is not given a tokenizer, so the checkpoints have no tokenizer
+files. The tokenizer comes from distilbert-base-uncased.
+"""
+
 import argparse
 
 import numpy as np
