@@ -105,7 +105,7 @@ The model is on Hugging Face: [maryolarewaju/complaint-triage-distilbert](https:
 
 ## Choices and bugs
 
-**Epoch 2, not epoch 3.** Validation F1 was 0.8700 at epoch 2 and 0.8707 at epoch 3, a gain too small to matter. Validation loss rose from 0.808 to 0.903 while training loss kept falling, which is overfitting. I kept epoch 2.
+**Epoch 2, not epoch 3.** In the second training stage, validation F1 was 0.8700 at epoch 2 and 0.8707 at epoch 3. I treated that 0.0007 gap as too small to matter, which is a judgment call. Validation loss rose from 0.808 to 0.903 while training loss fell from 0.584 to 0.432, which is a sign of overfitting. The trainer was set to keep the best F1 checkpoint, which would have been epoch 3, so I picked the epoch 2 checkpoint by hand.
 
 **A bug with no error message.** My first test-set run printed a full report with no errors, and it predicted "Debt collection" for all 57,056 complaints. I traced it back one step at a time: the model file was the right size, its scores looked healthy, and the tokenized input was just `[2, 1, 1, 1, ...]`. The checkpoint had no tokenizer files, and loading the tokenizer from it quietly produced an empty vocabulary. I loaded the tokenizer from `distilbert-base-uncased` instead and the real result came back.
 
