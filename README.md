@@ -98,7 +98,7 @@ I chose 0.87 on validation, then checked it once on test. The two agreed. The 95
 
 1. Clean the text and merge category names that CFPB renamed in 2017.
 2. Drop categories under 1,000 complaints and complaints under 10 words.
-3. Fine-tune `distilbert-base-uncased` for 3 epochs on a Kaggle GPU. I kept the epoch 2 model, not epoch 3 (see below).
+3. Fine-tune `distilbert-base-uncased` on a Kaggle GPU in two stages. Stage 1 is one epoch from the base model. Stage 2 continues from that checkpoint for 3 more epochs. I kept the epoch 2 checkpoint of stage 2, not epoch 3 (see below), so the published model has seen 3 epochs in total.
 4. At prediction time, validate the input, run the model, turn scores into probabilities, and compare the top probability to the cutoff.
 
 The model is on Hugging Face: [maryolarewaju/complaint-triage-distilbert](https://huggingface.co/maryolarewaju/complaint-triage-distilbert).
