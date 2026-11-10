@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 import torch
 
-from src.predict import device, model, tokenizer
+from src.predict import load_model
+
+tokenizer, model, device = load_model()
 
 TEST_CSV = "data/processed/test.csv"
 TEST_PROBS = "data/processed/test_probs.npy"

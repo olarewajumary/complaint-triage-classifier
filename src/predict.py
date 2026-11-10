@@ -5,16 +5,22 @@ from transformers import DistilBertTokenizer, DistilBertForSequenceClassificatio
 
 LOCAL_MODEL_DIR = "models/final_model"
 HUB_MODEL_ID = "maryolarewaju/complaint-triage-distilbert"
-MODEL_DIR = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HUB_MODEL_ID
 
-tokenizer = DistilBertTokenizer.from_pretrained(MODEL_DIR)
-model = DistilBertForSequenceClassification.from_pretrained(MODEL_DIR)
-model.eval()
+_cache = {}
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model = model.to(device)
 
-print(f"Model loaded on: {device}")
+def load_model():
+    """Load the tokenizer and model on first use, then reuse them."""
+    if "model" not in _cache:
+        model_dir = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HUB_MODEL_ID
+        tokenizer = DistilBertTokenizer.from_pretrained(model_dir)
+        model = DistilBertForSequenceClassification.from_pretrained(model_dir)
+        model.eval()
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model = model.to(device)
+        print(f"Model loaded on: {device}")
+        _cache.update(tokenizer=tokenizer, model=model, device=device)
+    return _cache["tokenizer"], _cache["model"], _cache["device"]
 
 labels = [
     "Checking or savings account",
@@ -55,7 +61,8 @@ def predict(text: str) -> dict:
     error = validate_input(text)
     if error:
         return {"prediction": "invalid_input", "error": error}
-
+        
+    tokenizer, model, device = load_model()
     inputs = tokenizer(text, truncation=True, max_length=512, padding=True, return_tensors="pt")
     inputs = {k: v.to(device) for k, v in inputs.items()}
 

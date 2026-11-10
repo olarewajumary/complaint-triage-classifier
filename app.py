@@ -5,8 +5,9 @@ st.set_page_config(page_title="Complaint Triage Classifier")
 
 @st.cache_resource
 def load_predict_function():
-    from src.predict import CONFIDENCE_THRESHOLD, predict
+    from src.predict import CONFIDENCE_THRESHOLD, load_model, predict
 
+    load_model()
     return predict, CONFIDENCE_THRESHOLD
 
 
