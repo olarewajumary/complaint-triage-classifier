@@ -1,8 +1,10 @@
 # Consumer Complaint Triage Classifier
 
+Weighted F1 is 0.867 on the 53,866 test complaints that were not in the training data. With the 0.87 cutoff, the model answers 77.4% of the full test set on its own at 95.1% accuracy and sends 22.6% to a person.
+
 Sorts consumer financial complaints into 10 categories with a fine-tuned DistilBERT, and sends the ones it is unsure about to a human instead of guessing.
 
-![Python](https://img.shields.io/badge/python-3.14-blue)
+![Python](https://img.shields.io/badge/tested%20on%20python-3.14-blue)
 [![Model on Hugging Face](https://img.shields.io/badge/Hugging%20Face-model-yellow)](https://huggingface.co/maryolarewaju/complaint-triage-distilbert)
 ![Weighted F1](https://img.shields.io/badge/weighted%20F1-0.867%20on%20unseen%20test-brightgreen)
 [![Live demo](https://img.shields.io/badge/demo-live%20on%20Streamlit-FF4B4B)](https://complaint-triage.streamlit.app/)
@@ -21,14 +23,13 @@ The app loads the model from the Hugging Face Hub. Free Streamlit apps can go to
 
 ## The problem
 
-A bank gets thousands of complaints a day, and each one has to reach the right team. Sorting them by hand is slow, and a complaint that reaches the wrong team waits. This project reads the complaint text, picks one of 10 product categories, and gives a confidence score. When the confidence is low, it says `needs_human_review` and does not force an answer.
+A company that receives consumer financial complaints has to route each one to the right team.
 
 ## What it does
 
 - Reads a complaint and returns a category and a confidence score.
 - Flags low-confidence complaints for a person. The cutoff is 0.87, picked from data (see "Choosing the cutoff").
 - Rejects empty, too-short (under 5 words) and non-text input with a clear message, not a crash.
-- Beats a TF-IDF and Logistic Regression baseline on every overall measure I tracked.
 
 Example, from `src/predict.py`:
 
@@ -109,14 +110,12 @@ The model is on Hugging Face: [maryolarewaju/complaint-triage-distilbert](https:
 
 **A bug with no error message.** My first test-set run printed a full report with no errors, and it predicted "Debt collection" for all 57,056 complaints. I traced it back one step at a time: the model file was the right size, its scores looked healthy, and the tokenized input was just `[2, 1, 1, 1, ...]`. The checkpoint had no tokenizer files, and loading the tokenizer from it quietly produced an empty vocabulary. I loaded the tokenizer from `distilbert-base-uncased` instead and the real result came back.
 
-**Two names for one thing.** CFPB renamed its product list in 2017, so the same category appeared under two names. I merged them before training.
-
 ## Limitations
 
 - **Three weak categories.** Vehicle loan, Payday/title loan and Consumer loan sit near 0.59 F1.
 - **Part of that weakness is the labels.** "Consumer loan" ends on 2017-04-21 and "Vehicle loan or lease" begins on 2017-04-24. By sub-product, 64% of the old Consumer loan complaints are vehicle loans or leases, so the model has to tell apart two names for the same kind of complaint. Fixing it means relabeling and retraining.
 - **The model leans toward big categories.** I did not weight classes when fine-tuning the transformer, so most of its mistakes send small categories to Debt collection or Credit reporting. The baseline was class-weighted. Weighting the transformer is the next thing I would try.
-- **Confidence is not a guarantee.** In 10 mistakes I read by hand, the lowest confidence was 0.51. Several complaints describe a debt collector and never mention the original loan, and a person would also file them under debt collection.
+- **Confidence is not a guarantee.** In 10 mistakes I read by hand, the lowest confidence was 0.51. Several complaints describe a debt collector and never mention the original loan, and I judged that a person might also file them under debt collection.
 - **Long complaints are cut off.** In a sample of 1,000, about 11.6% were longer than the model's 512-token limit.
 - **Old data.** Complaints are from 2015 to 2019, and the text has masked names and numbers ("XXXX").
 - **The 0.87 cutoff** suits a 95% accuracy target on this data. A different target or different data needs a new sweep.
@@ -134,7 +133,7 @@ hf download maryolarewaju/complaint-triage-distilbert --local-dir models/final_m
 python src/predict.py
 ```
 
-To rebuild the data and the numbers, put the Kaggle mirror CSV at `data/raw/consumer_complaints_kaggle.csv`, then:
+To rebuild the data and the numbers, install the training requirements (`pip install -r requirements-train.txt`), put the Kaggle mirror CSV at `data/raw/consumer_complaints_kaggle.csv`, then:
 
 ```
 python src/download_data.py
@@ -142,7 +141,7 @@ python src/split_data.py
 python src/train_baseline.py
 ```
 
-The test-set and validation scores come from one inference pass on a Kaggle GPU (about 17 minutes each), and training fits inside Kaggle's free GPU quota. Put the scores in `data/processed/` as `test_probs.npy` and `val_probs.npy`, then:
+The test-set and validation scores come from one inference pass on a Kaggle GPU. Put the scores in `data/processed/` as `test_probs.npy` and `val_probs.npy`, then:
 
 ```
 python src/evaluate.py
@@ -151,10 +150,32 @@ python src/error_analysis.py
 python src/tune_threshold.py
 ```
 
-<!-- Add after train.py exists: a "Training" section with the command, seeds and package versions. -->
+## Training
+
+`src/train.py` is the stage 2 training code from my Kaggle notebooks. It continues from a checkpoint made by a 1-epoch stage 1 run that is not in this repo, so `--checkpoint` is required. Install the training requirements first: `pip install -r requirements-train.txt`.
+
+```
+python src/train.py --checkpoint <folder with the stage 1 checkpoint>
+```
+
+Settings, read from the `training_args.bin` saved by the real run: learning rate 5e-5, weight decay 0, no warmup, linear schedule, fp16, seed 42, 512 tokens with padding to max length, 16 per device, 3 epochs. Stage 2 took 6h27m on a Kaggle GPU session.
+
+What I did not record or confirm:
+
+- **Package versions.** I installed with unpinned `pip`, so the training versions are unknown. `requirements-train.txt` lists the versions I ran locally, not the ones used for training.
+- **The accelerator.** The steps per epoch and the throughput suggest an effective batch of about 32, which I think means two GPUs at 16 each. That is an inference, and I never confirmed the GPU type.
+- **Python version.** It was 3.13, read from a path in a warning message.
+- **The seed.** 42 is the library default and the notebook did not set it. `train.py` sets it explicitly.
+- **Stage 1 code.** I do not have the stage 1 notebook, only its saved settings.
+
+I tested `train.py` end to end on a small sample on my laptop CPU (8 steps) to check that it runs:
+
+```
+python src/train.py --checkpoint distilbert-base-uncased --sample-rows 32 --epochs 1 --batch-size 4
+```
+
+The score from that run is meaningless at 32 rows. The script ends on the best-F1 epoch, which was epoch 3 in my real run. The published model is the epoch 2 checkpoint I picked by hand (see "Choices and bugs").
 
 ## Built with
 
-Python, pandas, scikit-learn (TF-IDF and Logistic Regression), PyTorch, Hugging Face Transformers (DistilBERT), Hugging Face Hub, matplotlib, Kaggle (GPU).
-
-The git history shows the order the work happened in.
+Python, PyTorch, Hugging Face Transformers (DistilBERT), scikit-learn (baseline), Streamlit. Exact versions are in `requirements.txt` and `requirements-train.txt`.
