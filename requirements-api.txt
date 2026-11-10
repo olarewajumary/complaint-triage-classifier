@@ -1,0 +1,4 @@
+-r requirements.txt
+fastapi==0.162.4
+pydantic==2.14.3
+uvicorn==0.54.0
