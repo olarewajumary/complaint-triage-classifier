@@ -47,7 +47,7 @@ Example, from `src/predict.py`:
 
 380,371 real complaints from the CFPB Consumer Complaint Database, 2015 to 2019, 10 categories, split 70/15/15 (266,259 train, 57,056 validation, 57,056 test) with stratification so every split keeps the same category mix.
 
-CFPB stopped publishing complaint narratives in its public database in August 2026, so the live source no longer has the text this project needs. I used a public mirror of the older data. <!-- TODO: add the CFPB announcement link here, and the Kaggle mirror link (Consumer Complaint Database by selener) -->
+CFPB stopped publishing complaint narratives in its public database in August 2026 ([CFPB announcement](https://www.consumerfinance.gov/about-us/newsroom/the-cfpb-to-cease-discretionary-publication-of-complaint-narratives-and-visualizations/)), so the live source no longer has the text this project needs. I used a public mirror of the older data: the [Consumer Complaint Database by selener on Kaggle](https://www.kaggle.com/datasets/selener/consumer-complaint-database).
 
 The categories are very uneven. The biggest has about 124,000 complaints and the smallest about 5,700 in the full cleaned set.
 
