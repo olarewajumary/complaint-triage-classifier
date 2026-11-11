@@ -1,0 +1,10 @@
+venv/
+.git/
+__pycache__/
+*.pyc
+data/
+reports/
+docs/
+models/train_output/
+requirements-train.txt
+README.md
