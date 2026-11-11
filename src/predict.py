@@ -45,7 +45,7 @@ def validate_input(text) -> str | None:
     text = text.strip()
     
     if len(text) == 0:
-        return "Input cannot be empty."
+        return Input is empty.
     
     word_count = len(text.split())
     if word_count < MIN_INPUT_WORDS:
