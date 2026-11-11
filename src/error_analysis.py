@@ -1,8 +1,8 @@
-import pandas as pd
 import numpy as np
-from confusion_matrix_plot import SHORT_NAMES
-from check_duplicates import load_split
+import pandas as pd
 
+from check_duplicates import load_split
+from confusion_matrix_plot import SHORT_NAMES
 from evaluate import load_results
 
 

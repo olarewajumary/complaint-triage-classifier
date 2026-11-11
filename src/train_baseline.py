@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
+
 from check_duplicates import flag_duplicates
 
 train_df = pd.read_csv("data/processed/train.csv")

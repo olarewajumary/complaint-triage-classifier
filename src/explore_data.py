@@ -1,4 +1,3 @@
-import pandas as pd
 from data_cleaning import load_clean_data
 
 df = load_clean_data("data/raw/complaints.csv")

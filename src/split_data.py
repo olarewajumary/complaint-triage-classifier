@@ -1,5 +1,5 @@
-import pandas as pd
 from sklearn.model_selection import train_test_split
+
 from data_cleaning import load_clean_data
 
 df = load_clean_data("data/raw/complaints.csv")

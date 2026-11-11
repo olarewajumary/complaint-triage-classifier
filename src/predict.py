@@ -1,7 +1,7 @@
 import os
 
 import torch
-from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
+from transformers import DistilBertForSequenceClassification, DistilBertTokenizer
 
 LOCAL_MODEL_DIR = "models/final_model"
 HUB_MODEL_ID = "maryolarewaju/complaint-triage-distilbert"
