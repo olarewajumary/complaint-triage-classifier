@@ -8,6 +8,8 @@ Sorts consumer financial complaints into 10 categories with a fine-tuned DistilB
 [![Model on Hugging Face](https://img.shields.io/badge/Hugging%20Face-model-yellow)](https://huggingface.co/maryolarewaju/complaint-triage-distilbert)
 ![Weighted F1](https://img.shields.io/badge/weighted%20F1-0.867%20on%20unseen%20test-brightgreen)
 [![Live demo](https://img.shields.io/badge/demo-live%20on%20Streamlit-FF4B4B)](https://complaint-triage.streamlit.app/)
+[![CI](https://github.com/olarewajumary/complaint-triage-classifier/actions/workflows/ci.yml/badge.svg)](https://github.com/olarewajumary/complaint-triage-classifier/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## Live demo
 
