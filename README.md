@@ -178,6 +178,53 @@ python src/train.py --checkpoint distilbert-base-uncased --sample-rows 32 --epoc
 
 The score from that run is meaningless at 32 rows. The script ends on the best-F1 epoch, which was epoch 3 in my real run. The published model is the epoch 2 checkpoint I picked by hand (see "Choices and bugs").
 
+## API
+
+`src/api.py` serves the classifier over HTTP with FastAPI. The model loads once when the server starts.
+
+```
+pip install -r requirements-api.txt
+python -m uvicorn src.api:app --port 8000
+```
+
+- `GET /health` returns `{"status": "ok"}`.
+- `POST /predict` takes `{"text": "..."}` and returns the same fields as `predict()`: `prediction`, `confidence`, and `top_guess` when the answer is `needs_human_review`.
+- Text that is empty, too short or not a string gets HTTP 422 with the reason.
+- `/docs` shows the interactive docs page.
+
+I tested these four cases by hand: health, a real prediction, text that is too short, and a number instead of text. I have not load-tested it.
+
+## Docker
+
+```
+docker build -t complaint-triage-api .
+docker run -d --name triage-api -p 8000:8000 complaint-triage-api
+```
+
+The build copies `models/final_model` into the image, so run the `hf download` command from "Run it yourself" first. I baked the model in so the container needs no download when it starts, and `HF_HUB_OFFLINE=1` enforces that. The cost is a bigger image and a rebuild when the model changes.
+
+What I checked on the image (Python 3.14 slim base, `torch 2.14.0+cpu`):
+
+- Docker reports a size of 2.24 GB on disk.
+- The model file inside has the same SHA-256 as the one on Hugging Face (starts `13030093e3d2`).
+- It runs as a non-root user, and the container reports healthy.
+- The model loads with the network switched off.
+- The mortgage example gives confidence 0.658 in the container, the same as on my laptop.
+
+I built and ran it with Docker Desktop on Windows. I have not tested other hosts or pushed the image to a registry.
+
+## Tests and CI
+
+```
+pip install -r requirements-test.txt
+python -m pytest tests
+ruff check app.py src tests
+```
+
+There are 28 tests: input validation, data cleaning, the duplicate flag and the API. The API tests use a fake `predict` and a fake model loader, so no model is loaded. GitHub Actions runs the lint and the tests on pushes to `main` and on pull requests.
+
+To check the gate, I opened a pull request with a deliberately broken error message. The checks failed, and I closed it without merging. Checks do not block merging yet, because I have not set a branch protection rule.
+
 ## Built with
 
 Python, PyTorch, Hugging Face Transformers (DistilBERT), scikit-learn (baseline), Streamlit. Exact versions are in `requirements.txt` and `requirements-train.txt`.
