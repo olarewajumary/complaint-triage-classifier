@@ -52,7 +52,7 @@ Example, from `src/predict.py`:
 
 CFPB stopped publishing complaint narratives in its public database in August 2026 ([CFPB announcement](https://www.consumerfinance.gov/about-us/newsroom/the-cfpb-to-cease-discretionary-publication-of-complaint-narratives-and-visualizations/)), so the live source no longer has the text this project needs. I used a public mirror of the older data: the [Consumer Complaint Database by selener on Kaggle](https://www.kaggle.com/datasets/selener/consumer-complaint-database).
 
-The categories are very uneven. The biggest has about 124,000 complaints and the smallest about 5,700 in the full cleaned set.
+The categories are very uneven. The biggest has about 122,000 complaints and the smallest about 5,700 in the full cleaned set.
 
 ## Results
 
@@ -118,7 +118,7 @@ The model is on Hugging Face: [maryolarewaju/complaint-triage-distilbert](https:
 - **Part of that weakness is the labels.** "Consumer loan" ends on 2017-04-21 and "Vehicle loan or lease" begins on 2017-04-24. By sub-product, 64% of the old Consumer loan complaints are vehicle loans or leases, so the model has to tell apart two names for the same kind of complaint. Fixing it means relabeling and retraining.
 - **The model leans toward big categories.** I did not weight classes when fine-tuning the transformer, so most of its mistakes send small categories to Debt collection or Credit reporting. The baseline was class-weighted. Weighting the transformer is the next thing I would try.
 - **Confidence is not a guarantee.** In 10 mistakes I read by hand, the lowest confidence was 0.51. Several complaints describe a debt collector and never mention the original loan, and I judged that a person might also file them under debt collection.
-- **Long complaints are cut off.** In a sample of 1,000, about 11.6% were longer than the model's 512-token limit.
+- **Long complaints are cut off.** 10.9% of the test complaints (6,239 of 57,056) are longer than the model's 512-token limit, and the text past the limit is not read. `src/check_token_lengths.py` prints this count.
 - **Old data.** Complaints are from 2015 to 2019, and the text has masked names and numbers ("XXXX").
 - **The 0.87 cutoff** suits a 95% accuracy target on this data. A different target or different data needs a new sweep.
 - **Not for real compliance decisions.**
